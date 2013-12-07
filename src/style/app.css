@@ -1,0 +1,125 @@
+.app {
+}
+
+.tsinfolink {
+    position:absolute;
+    right:0px;
+    width:5%;
+}
+
+.ts-feature {
+    margin-left: 8px;
+    margin-top: 12px;
+}
+
+.ts-feature-headline {
+    font-family:"Times New Roman",Times,serif;
+    font-size:20px;
+}
+
+
+.ts-feature-details {
+    margin-left: 4px;
+}
+
+.ts-story {
+    margin-left: 16px;
+}
+
+.ts-story-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:18px;
+    margin-left: 8px;
+}
+
+.ts-story-headline {
+    font-family:"Times New Roman",Times,serif;
+    font-size:16px;
+    margin-top: 12px;
+}
+
+.ts-story-details {
+}
+
+.ts-test {
+    margin-left: 16px;
+}
+
+.ts-test-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-left: 8px;
+}
+
+.ts-dependency {
+    margin-left: 16px;
+}
+
+.ts-dependency-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-left: 8px;
+}
+
+.ts-notes {
+    margin-left: 16px;
+}
+
+.ts-notes-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-left: 8px;
+}
+
+.ts-test-headline {
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-top: 12px;
+}
+
+.ts-test-details {
+}
+
+.ts-task {
+    margin-left: 16px;
+}
+
+.ts-task-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-left: 8px;
+}
+
+.ts-task-headline {
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-top: 12px;
+}
+
+.ts-task-details {
+}
+
+.ts-defect {
+    margin-left: 16px;
+}
+
+.ts-defect-divider {
+    margin-top:12px;
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-left: 8px;
+}
+
+.ts-defect-headline {
+    font-family:"Times New Roman",Times,serif;
+    font-size:14px;
+    margin-top: 12px;
+}
+
+.ts-defect-details {
+}
