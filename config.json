@@ -2,5 +2,5 @@
     "name": "Rally PRD Report",
     "className": "CustomApp",
     "server": "https://rally1.rallydev.com",
-    "sdk": "2.0rc1"
+    "sdk": "2.0rc2"
 }
