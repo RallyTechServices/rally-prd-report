@@ -1,21 +1,10 @@
-.ts-sans-serif {
-    font-family: Arial, Helvetica, sans-serif;
-}
 .ts-table-with-thin-border {
     border-style: solid;
     border-width: 1px;
 }
-.ts-table-header {
-    background-color: #3399FF;
-    font-family: Arial, Helvetica, sans-serif;
-    border-style:solid;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-top-width: 1px;
-}
+
 .ts-table-header-center-justified {
-    background-color: #99CCFF;
+    background-color: #99CCFF; 
     font-family: "Times New Roman", Times, serif;
     text-align: center;
     font-size: small;
@@ -24,11 +13,12 @@
     border-left-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 1px;
-    border-top-width: 1px
+    border-top-width: 1px;
+    
 
 }
 .ts-table-header-left-justified {
-    background-color: #99CCFF;
+    background-color: #99CCFF; 
     font-family: Arial, Helvetica, sans-serif;
     text-align: left;
     font-size: small;
@@ -51,17 +41,6 @@
     border-top-width: 1px;
     padding: 5px;
 }
-.ts-table-cell-left-justified-bold {
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: left;
-    font-size: small;
-    font-weight:bold;
-    border:solid;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-top-width: 1px;
-}
 
 .ts-table-cell-center-justified {
     font-family: Arial, Helvetica, sans-serif;
@@ -73,19 +52,6 @@
     border-bottom-width: 1px;
     border-top-width: 1px;
 }
-
-.ts-table-shaded-nonbold-left {
-    background-color: #3399FF;
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: left;
-    font-size: small;   
-    border:solid;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-top-width: 1px;  
-}
-
 
 h2.ts-sans-serif-blue {
     font-family: Arial, Helvetica, sans-serif;

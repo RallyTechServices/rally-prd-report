@@ -183,6 +183,36 @@ Ext.define('CustomApp', {
         html.push('</table>');
         
         this.down('#report_box').add({ xtype:'container',html:html.join('\r\n'), padding: 10});
+        this._addPrintButton();
+    },
+    _addPrintButton: function() {
+        this.down('#button_box').removeAll();
+        
+        this.down('#button_box').add({
+            xtype:'rallybutton',
+            text:'Print',
+            scope: this,
+            handler: function() {
+                var output = Ext.clone(this.down('#report_box')).el;
+                var html = output.dom.innerHTML;
+                
+                var print_window = window.open('','PrintWindow','width=1000,height=400');
+                print_window.document.write('<html><head>');
+                print_window.document.write('<title>Print</title>');
+                print_window.document.write(this.css_string);
+                print_window.document.write('</head>');
+                
+                var class_string = "x-body x-webkit x-chrome x-mac x-reset x-container x-container-default x-layout-fit";
+                print_window.document.write('<body class="' + class_string + '">');
+                print_window.document.write('<div id="fred"></div>');
+                print_window.document.write(html);
+                print_window.document.write('</body></html>');
+                print_window.document.close();
+
+                print_window.print();
+                
+            }
+        });
     },
     _makeFeatureDetailsTables:function(feature_oids,records_by_oid){
         this.logger.log("_makeFeatureDetailsTables",feature_oids,records_by_oid);
@@ -324,5 +354,87 @@ Ext.define('CustomApp', {
 
         var blob = new Blob([file_content.join("\r\n")],{type:'text/plain;charset=utf-8'});
         saveAs(blob,file_name);
-    }
+    },
+    css_string: "<style>" +
+            "table { page-break-inside:auto } " +
+            "tr    { page-break-inside:avoid; page-break-after:auto }" +
+            "thead { display:table-header-group } " +
+            "tfoot { display:table-footer-group } " +
+            ".ts-table-with-thin-border {" +
+"                border-style: solid;" +
+"                border-width: 1px;" +
+"            }" +
+"            " +
+"            .ts-table-header-center-justified {" +
+"                background-color: #99CCFF !important; " +
+"                -webkit-print-color-adjust: exact;" +
+"                font-family: 'Times New Roman', Times, serif;" +
+"                text-align: center;" +
+"                font-size: small;" +
+"                font-weight:bold;" +
+"                border:solid;" +
+"                border-left-width: 1px;" +
+"                border-right-width: 1px;" +
+"                border-bottom-width: 1px;" +
+"                border-top-width: 1px" +
+"            " +
+"            }" +
+"            .ts-table-header-left-justified {" +
+"                background-color: #99CCFF!important; " +
+"                -webkit-print-color-adjust: exact;" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                text-align: left;" +
+"                font-size: small;" +
+"                font-weight:bold;" +
+"                border:solid;" +
+"                border-left-width: 1px;" +
+"                border-right-width: 1px;" +
+"                border-bottom-width: 1px;" +
+"                border-top-width: 1px;  " +
+"                padding: 5px;" +
+"            }" +
+"            .ts-table-cell-left-justified {" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                text-align: left;" +
+"                font-size: small;" +
+"                border:solid;" +
+"                border-left-width: 1px;" +
+"                border-right-width: 1px;" +
+"                border-bottom-width: 1px;" +
+"                border-top-width: 1px;" +
+"                padding: 5px;" +
+"            }" +
+"            " +
+"            .ts-table-cell-center-justified {" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                text-align: center;" +
+"                font-size: small;" +
+"                border:solid;" +
+"                border-left-width: 1px;" +
+"                border-right-width: 1px;" +
+"                border-bottom-width: 1px;" +
+"                border-top-width: 1px;" +
+"            }" +
+"            " +
+"            h2.ts-sans-serif-blue {" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                color: #000066;" +
+"                font-size:20px;" +
+"                margin-bottom: 10px;" +
+"            }" +
+"            " +
+"            h3.ts-sans-serif-blue {" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                color: #000066;" +
+"                font-size:16px;" +
+"                margin-bottom: 10px;" +
+"            }" +
+"            " +
+"            " +
+"            .tsinfolink {" +
+"                position:absolute;" +
+"                right:0px;" +
+"                width:5%;" +
+"            }" +
+        "</style>"
 });
