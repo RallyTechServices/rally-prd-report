@@ -19,7 +19,7 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
         {dataIndex:'Description',text:'Description'},
-        {dataIndex:'TestCases', text:'Test Cases'},
+        {dataIndex:'TestCases', text:'Test Cases',renderer: TSRenderers.renderCheck},
         {dataIndex:'Comments',text:'Comments'}
     ],
     items: [
@@ -135,6 +135,7 @@ Ext.define('CustomApp', {
             autoLoad: true,
             filters:filter_object,
             context: { project: null },
+            sorters: [{property:'Rank'}],
             listeners: {
                 scope: this,
                 load: function(store,records,successful,opts){
@@ -308,7 +309,6 @@ Ext.define('CustomApp', {
         
         var display_value = value;
         if ( field.renderer ){
-            me.logger.log("Render!",value);
             display_value = field.renderer(value,record,this);
         } else if ( value === null ) {
             display_value = '--';
