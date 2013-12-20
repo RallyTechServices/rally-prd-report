@@ -1,6 +1,12 @@
 Ext.define('TSRenderers',{
     singleton: true,
 
+    renderCheck: function(value){
+        if ( ! value || value == "false" ) {
+            return "";
+        } 
+        return "<img src='https://us1.rallydev.com/slm/js-lib/rui/builds/rui/resources/themes/images/default/cardboard/slim-cards/ready-icon.png'/>";
+    },
     renderPercent: function(value,record,app) {
         if ( ! value ) {
             return "";

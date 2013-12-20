@@ -12,11 +12,11 @@ Ext.define('CustomApp', {
         {dataIndex:'Name',text:'Requirement'},
         {dataIndex:'Priority',text:'Priority'},
         {dataIndex:'Platforms',text:'Platforms',subCells:[
-            {dataIndex:'PlatformDotCom',text:'Dotcom'},
-            {dataIndex:'PlatformiPad',text:'iPad'},
-            {dataIndex:'PlatformiPhone',text:'iPhone'},
-            {dataIndex:'PlatformAndroidTablet',text:'Android Tablet'},
-            {dataIndex:'PlatformAndroidPhone',text:'Android Phone'}
+            {dataIndex:'PlatformDotCom',text:'Dotcom',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformiPad',text:'iPad',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformiPhone',text:'iPhone',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
         {dataIndex:'Description',text:'Description'},
         {dataIndex:'TestCases', text:'Test Cases'},
@@ -192,10 +192,10 @@ Ext.define('CustomApp', {
                 html.push('<td id="id" class="ts-table-cell-center-justified" style="height: 25px; width: 100px;">');
                 if ( field.dataIndex === 'FormattedID' ) {
                     html.push('<a href="#' + feature.get('FormattedID') + '">');
-                    html.push(feature.get(field.dataIndex));
+                    html.push(me._render(feature,field));
                     html.push('</a>');
                 } else {
-                    html.push(feature.get(field.dataIndex));
+                    html.push(me._render(feature,field));
                 }
                 html.push('</td>');
             });
@@ -268,8 +268,8 @@ Ext.define('CustomApp', {
                 html.push(row.text);
                 html.push('</td>');
                 html.push('<td class="ts-table-cell-left-justified" style="height: 25px; " colspan="5">');
-           
-                html.push(feature.get(row.dataIndex));
+                
+                html.push(me._render(feature,row));
                 html.push('</td>');
                 html.push('</tr>');
             }
@@ -278,6 +278,7 @@ Ext.define('CustomApp', {
         return html;
     },
     _getRowWithSubCell: function(row,feature){
+        var me = this;
         var html = [];
         html.push('<tr>');
         html.push('<td class="ts-table-header-left-justified" style="width: 100px;" rowspan="2">');
@@ -293,7 +294,7 @@ Ext.define('CustomApp', {
         html.push('<tr>');
         Ext.Array.each(row.subCells,function(cell){
             html.push('<td class="ts-table-cell-center-justified" style="height: 25px; width: 125px;">');
-            html.push(feature.get(cell.dataIndex) );
+            html.push(me._render(feature,cell) );
             html.push('</td>');
         });
         html.push('</tr>');
@@ -307,6 +308,7 @@ Ext.define('CustomApp', {
         
         var display_value = value;
         if ( field.renderer ){
+            me.logger.log("Render!",value);
             display_value = field.renderer(value,record,this);
         } else if ( value === null ) {
             display_value = '--';
