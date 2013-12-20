@@ -39,24 +39,45 @@ Ext.define('CustomApp', {
     },
     _addProductChooser: function() {
         this.down('#selector_box').add({
-            xtype: 'rallymultiobjectpicker',
+            xtype: 'rallycombobox',
+            allowNoEntry: true,
             autoExpand: true,
             itemId:'product_chooser',
-            modelType: 'portfolioitem/product',
-            fieldLabel: 'Product(s)',
+            fieldLabel: 'Product',
             labelWidth: 75,
             storeConfig: {
+                autoLoad:true,
+                model:'portfolioitem/product',
                 limit:'Infinity'
             },
             listeners: {
                 scope: this,
-                blur: function(box) {
-                    if ( box.getValue().length > 0 ) {
+                change: function(box) {
+                    if ( box.getValue() ) {
                         this._getData();
                     }
                 }
             }
         });
+//        this.down('#selector_box').add({
+//            xtype: 'rallymultiobjectpicker',
+//            autoExpand: true,
+//            itemId:'product_chooser',
+//            modelType: 'portfolioitem/product',
+//            fieldLabel: 'Product(s)',
+//            labelWidth: 75,
+//            storeConfig: {
+//                limit:'Infinity'
+//            },
+//            listeners: {
+//                scope: this,
+//                blur: function(box) {
+//                    if ( box.getValue().length > 0 ) {
+//                        this._getData();
+//                    }
+//                }
+//            }
+//        });
     },
     _getIndices: function(hashes){
         var indices = [];
@@ -76,7 +97,9 @@ Ext.define('CustomApp', {
         var me = this;
         this.logger.log('_getData');
         this._resetData();
-        this._getFeatures().then({
+        var product = this.down('#product_chooser').getRecord();
+        
+        this._getFeatures([product]).then({
             success: function(feature_oids) {
                 me.logger.log("Features",feature_oids.length);
                 me._mask("Generating Tables");
@@ -90,7 +113,7 @@ Ext.define('CustomApp', {
             }
         });
     },
-    _getFeatures: function() {
+    _getFeatures: function(values) {
         var me = this;
         var deferred = Ext.create('Deft.Deferred');
         this.logger.log('_getFeatures');  
@@ -98,7 +121,8 @@ Ext.define('CustomApp', {
         
         var filters = [];
 
-        var values = this.down('#product_chooser').getValue();
+        //var values = this.down('#product_chooser').getValue();
+
         Ext.Array.each(values,function(value){
             filters.push({property:'Parent.ObjectID',value:value.get('ObjectID')});
         });
