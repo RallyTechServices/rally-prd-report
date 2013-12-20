@@ -18,7 +18,6 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet'},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone'}
         ]},
-        {dataIndex:'UseCase',text:'Use Case'},
         {dataIndex:'Description',text:'Description'},
         {dataIndex:'TestCases', text:'Test Cases'},
         {dataIndex:'Comments',text:'Comments'}
