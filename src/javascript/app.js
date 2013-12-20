@@ -5,8 +5,7 @@ Ext.define('CustomApp', {
     _feature_summary_table_fields: [
         {dataIndex:'FormattedID',text:'PRD ID'},
         {dataIndex:'Priority',text:'Priority'},
-        {dataIndex:'Dependencies',text:'In/Out'},
-        {dataIndex:'UseCase',text:'Use Case'}
+        {dataIndex:'Name',text:'Requirement'}
     ],
     _feature_detail_table_rows: [
         {dataIndex:'FormattedID',text:'ID'},
