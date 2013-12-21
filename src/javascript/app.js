@@ -97,6 +97,9 @@ Ext.define('CustomApp', {
         this._resetData();
         var product = this.down('#product_chooser').getRecord();
         
+        this._makeTitlePage(product);
+        this._makeProductSummarySection(product);
+        
         this._getFeatures([product]).then({
             success: function(feature_oids) {
                 me.logger.log("Features",feature_oids.length);
@@ -168,6 +171,63 @@ Ext.define('CustomApp', {
         if ( this.down('#selector_outer_box').getEl() ) {
             this.down('#selector_outer_box').getEl().unmask();
         }
+    },
+    _makeTitlePage: function(product) {
+        this.logger.log("_makeTitlePage",product);
+        var html = [];
+        html.push('<div class="print-after-box">');
+        
+        html.push('<div class="ts-title">');
+        html.push(product.get('Name') + '<br/>');
+        html.push('PRODUCT REQUIREMENT<br/>');
+        html.push('DOCUMENT (PRD)');
+        html.push('</div>');
+        
+        html.push('<div class="ts-title-contact">');
+        html.push('Point of Contact: ' + product.get('Owner')._refObjectName);
+        html.push('</div>');
+        
+        html.push('</div>');
+        
+        this.down('#report_box').add({ xtype:'container',html:html.join('\r\n'), padding: 10});
+        
+    },
+    _makeProductSummarySection:function(product){
+        this.logger.log("_makeProductSummarySection",product);
+        var html = [];
+        html.push('<div class="print-after-box">');
+        
+        html.push('<h2 class="ts-sans-serif-blue">1. Product Brief</h2>');
+        
+        html.push('<h3 class="ts-sans-serif-blue">1.1 Product Overview</h2>');
+        html.push('<div class="ts-indented">');
+        html.push(product.get('Description'));
+        html.push('</div>');
+        
+        html.push('<h3 class="ts-sans-serif-blue">1.2 Consumer Value Proposition</h2>');
+        html.push('<div class="ts-indented">');
+        html.push(product.get('ConsumerValue'));
+        html.push('</div>');
+        
+        html.push('<h3 class="ts-sans-serif-blue">1.3 Strategic Context</h2>');
+        html.push('<div class="ts-indented">');
+        html.push(product.get('StrategicContext'));
+        html.push('</div>');
+        
+        html.push('<h3 class="ts-sans-serif-blue">1.4 Proposed State</h2>');
+        html.push('<div class="ts-indented">');
+        html.push(product.get('ProposedState'));
+        html.push('</div>');
+               
+        html.push('<h3 class="ts-sans-serif-blue">1.5 Business Goals and Objectives</h2>');
+        html.push('<div class="ts-indented">');
+        html.push(product.get('BusinessGoalsDetails'));
+        html.push('</div>');
+        
+        html.push('</div>');
+        
+        this.down('#report_box').add({ xtype:'container',html:html.join('\r\n'), padding: 10});
+
     },
     _makeFeatureSummaryTable:function(feature_oids,records_by_oid) {
         var me = this;
@@ -389,6 +449,39 @@ Ext.define('CustomApp', {
 "                border-width: 1px;" +
 "            }" +
 "            " +
+
+"            .ts-title {" +
+"                font-family: 'Times New Roman', Times, serif;" +
+"                text-align: center;" +
+"                font-weight:bold;" +
+"                color: #000066;" +
+"                font-size:50px;" +
+"                margin: 50px;" +
+"                margin-top: 100px;" +
+"            }" +
+"            " +
+"            .ts-title-contact {" +
+"                font-family: 'Times New Roman', Times, serif;" +
+"                text-align: center;" +
+"                font-weight:bold;" +
+"                color: #000066;" +
+"                font-size:25px;" +
+"                margin: 50px;" +
+"            }" +
+
+"            .ts-indented {" +
+"                padding-left: 30px;" +
+"                margin-bottom: 10px;" +
+"            }" +
+"" +
+"            div.print-after-box {" +
+"               page-break-after:always;" +
+"            }" +
+"" +
+"            table {" +
+"               page-break-after:always;" +
+"            }" +
+"" +
 "            .ts-table-header-center-justified {" +
 "                background-color: #99CCFF !important; " +
 "                -webkit-print-color-adjust: exact;" +

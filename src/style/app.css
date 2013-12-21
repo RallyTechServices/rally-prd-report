@@ -3,6 +3,30 @@
     border-width: 1px;
 }
 
+.ts-title {
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+    font-weight:bold;
+    color: #000066;
+    font-size:50px;
+    margin: 50px;
+    margin-top: 100px;
+}
+
+.ts-title-contact {
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+    font-weight:bold;
+    color: #000066;
+    font-size:25px;
+    margin: 50px;
+}
+
+.ts-indented {
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
 .ts-table-header-center-justified {
     background-color: #99CCFF; 
     font-family: "Times New Roman", Times, serif;
@@ -65,6 +89,7 @@ h3.ts-sans-serif-blue {
     color: #000066;
     font-size:16px;
     margin-bottom: 10px;
+    margin-top; 10px;
 }
 
 
