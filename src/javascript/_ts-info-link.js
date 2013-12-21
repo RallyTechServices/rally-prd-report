@@ -52,9 +52,10 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 text = response.responseText;
                 if ( CHECKSUM ) {
                     if ( CHECKSUM !== me._generateChecksum(text) ) {
-                        console.log("Checksums don't match!");
+                        //console.log("Checksums don't match!");
                         if ( me.dialog ) {
-                            me.dialog.add({xtype:'container',html:'Checksums do not match'});
+//                            me.dialog.add({xtype:'container',html:'Checksums do not match'});
+//                            me.dialog.add({xtype:'container',html:CHECKSUM + "/" + me._generateChecksum(text)});
                         }
                     }
                 }

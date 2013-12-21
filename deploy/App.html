@@ -3,11 +3,11 @@
 <head>
     <title>Rally PRD Report</title>
     <!--  (c) 2013 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Fri Dec 20 2013 16:17:51 GMT-0800 (PST) -->
+    <!--  Build Date: Fri Dec 20 2013 16:31:58 GMT-0800 (PST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Fri Dec 20 2013 16:17:51 GMT-0800 (PST)";
-        var CHECKSUM = 31498518863;
+        var APP_BUILD_DATE = "Fri Dec 20 2013 16:31:58 GMT-0800 (PST)";
+        var CHECKSUM = 31752149701;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc2/sdk.js"></script>
@@ -69,9 +69,10 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 text = response.responseText;
                 if ( CHECKSUM ) {
                     if ( CHECKSUM !== me._generateChecksum(text) ) {
-                        console.log("Checksums don't match!");
+                        //console.log("Checksums don't match!");
                         if ( me.dialog ) {
-                            me.dialog.add({xtype:'container',html:'Checksums do not match'});
+//                            me.dialog.add({xtype:'container',html:'Checksums do not match'});
+//                            me.dialog.add({xtype:'container',html:CHECKSUM + "/" + me._generateChecksum(text)});
                         }
                     }
                 }
@@ -855,4 +856,4 @@ h3.ts-sans-serif-blue {
 
 </head>
 <body></body>
-</html>
+</html>
