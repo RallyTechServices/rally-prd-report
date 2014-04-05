@@ -38,8 +38,8 @@ Ext.define('CustomApp', {
     items: [
         {xtype:'container',itemId:'selector_outer_box', layout:{type:'hbox'}, padding: 10, items:[
             {xtype:'container',itemId:'type_box', margin: 5},
-            {xtype:'container',itemId:'selector_box', margin: 5},
-            {xtype:'container',itemId:'button_box',margin: 5}
+            {xtype:'container',itemId:'selector_box', margin: 5, defaults: { margin: 5 }},
+            {xtype:'container',itemId:'button_box',margin: 5, defaults: { margin: 5 }}
         ]},
         {xtype:'container',itemId:'report_box', padding: 10},
         {xtype:'tsinfolink'}
@@ -65,30 +65,15 @@ Ext.define('CustomApp', {
                 scope: this,
                 change: function(box) {
                     if ( box.getValue() ) {
-                        this._getData();
+                        this._getData([]);
+                        this.down('#pick_feature_button').setDisabled(false);
+                        this.down('#print_button').setDisabled(false);
                     }
                 }
             }
         });
-//        this.down('#selector_box').add({
-//            xtype: 'rallymultiobjectpicker',
-//            autoExpand: true,
-//            itemId:'product_chooser',
-//            modelType: 'portfolioitem/product',
-//            fieldLabel: 'Product(s)',
-//            labelWidth: 75,
-//            storeConfig: {
-//                limit:'Infinity'
-//            },
-//            listeners: {
-//                scope: this,
-//                blur: function(box) {
-//                    if ( box.getValue().length > 0 ) {
-//                        this._getData();
-//                    }
-//                }
-//            }
-//        });
+        this._addFeatureButton();
+        this._addPrintButton();
     },
     _getIndices: function(hashes){
         var indices = [];
@@ -104,16 +89,16 @@ Ext.define('CustomApp', {
         this._feature_oids = [];
         this._records_by_oid = {};
     },
-    _getData:function() {
+    _getData:function(chosen_features) {
         var me = this;
-        this.logger.log('_getData');
+        this.logger.log('_getData', chosen_features);
         this._resetData();
         var product = this.down('#product_chooser').getRecord();
         
         this._makeTitlePage(product);
         this._makeProductSummarySection(product);
         
-        this._getFeaturesAndStories([product]).then({
+        this._getFeaturesAndStories([product],chosen_features).then({
             success: function(feature_oids) {
                 me.logger.log("Features",feature_oids.length);
                 me._mask("Generating Tables");
@@ -127,7 +112,7 @@ Ext.define('CustomApp', {
             }
         });
     },
-    _getFeaturesAndStories: function(values) {
+    _getFeaturesAndStories: function(values,pre_chosen_features) {
         var me = this;
         var deferred = Ext.create('Deft.Deferred');
         this.logger.log('_getFeatures');  
@@ -135,11 +120,15 @@ Ext.define('CustomApp', {
         
         var filters = [];
 
-        //var values = this.down('#product_chooser').getValue();
-
-        Ext.Array.each(values,function(value){
-            filters.push({property:'Parent.ObjectID',value:value.get('ObjectID')});
-        });
+        if ( pre_chosen_features && pre_chosen_features.length > 0 ) {
+            Ext.Array.each(pre_chosen_features, function(feature){
+                filters.push({property:'ObjectID',value:feature.get('ObjectID')});
+            });
+        } else {
+            Ext.Array.each(values,function(value){
+                filters.push({property:'Parent.ObjectID',value:value.get('ObjectID')});
+            });
+        }
         
         var filter_object = Ext.create('Rally.data.QueryFilter',filters[0]);
         for ( var i=1;i<filters.length;i++ ) {
@@ -303,15 +292,27 @@ Ext.define('CustomApp', {
         html.push('</table>');
         
         this.down('#report_box').add({ xtype:'container',html:html.join('\r\n'), padding: 10});
-        this._addPrintButton();
+    },
+    _addFeatureButton: function() {
+        this.down('#button_box').add({
+            xtype:'rallybutton',
+            text:'Pick Features',
+            itemId:'pick_feature_button',
+            scope: this,
+            disabled: true,
+            handler: function() {
+                this._showFeaturePicker();
+            }
+        });
     },
     _addPrintButton: function() {
-        this.down('#button_box').removeAll();
         
         this.down('#button_box').add({
             xtype:'rallybutton',
             text:'Print',
+            itemId:'print_button',
             scope: this,
+            disabled: true,
             handler: function() {
                 var output = Ext.clone(this.down('#report_box')).el;
                 var html = output.dom.innerHTML;
@@ -523,6 +524,28 @@ Ext.define('CustomApp', {
         var blob = new Blob([file_content.join("\r\n")],{type:'text/plain;charset=utf-8'});
         saveAs(blob,file_name);
     },
+    _showFeaturePicker: function() {
+        if ( this.picker ) { this.picker.destroy(); }
+        var project_oid = this.down('#product_chooser').getRecord().get('ObjectID');
+        
+        this.logger.log("Project OID", project_oid);
+        this.picker = Ext.create('Rally.ui.dialog.ChooserDialog', {
+            artifactTypes: ['portfolioitem/feature'],
+            autoShow: true,
+            storeConfig: {
+                filters: [{property:'Parent.ObjectID',value:project_oid}]
+            },
+            title: 'Choose Features (selecting none shows all)',
+            multiple: true,
+            listeners: {
+                artifactChosen: function(selected){
+                    this._getData(selected);
+                },
+                scope: this
+            }
+         });
+         this.picker.show();
+    },
     css_string: "<style>" +
             "table { page-break-inside:auto } " +
             "tr    { page-break-inside:avoid; page-break-after:auto }" +
@@ -631,6 +654,13 @@ Ext.define('CustomApp', {
 "                margin-bottom: 10px;" +
 "            }" +
 "            " +
+"            h4.ts-sans-serif-blue {" +
+"                font-family: Arial, Helvetica, sans-serif;" +
+"                color: #000066;" +
+"                font-size:14px;" +
+"                margin-bottom: 10px;" +
+"                margin-top; 10px;" +
+"            }" +
 "            " +
 "            .tsinfolink {" +
 "                position:absolute;" +
