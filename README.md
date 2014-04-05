@@ -1,6 +1,21 @@
 #Rally PRD Report
 
+## Description
+
+This is a quick report for showing more details of features and their stories.
+It requires a bunch of custom fields that were in use by the specific customer,
+and a modified name for PIs.
+
 ## Development Notes
+
+### Display Structure
+
+It turns out that adding 150 million Ext containers to a page will kill your
+browser, so we are hand-rolling the html to push to the screen for each section.We're using deft promises to go and get all the data before generating the
+html for the PRD section.  When we get the stories for each PI, we're a) just
+getting the immediate children and b) adding the array of kids to the PI as
+a field called __stories, so we can get them when making the html.
+
 
 ### First Load
 

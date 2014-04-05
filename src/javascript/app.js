@@ -22,6 +22,20 @@ Ext.define('CustomApp', {
         {dataIndex:'TestCases', text:'Test Cases',renderer: TSRenderers.renderCheck},
         {dataIndex:'Comments',text:'Comments'}
     ],
+    _story_detail_table_rows: [
+        {dataIndex:'FormattedID',text:'ID'},
+        {dataIndex:'Name',text:'Requirement'},
+        {dataIndex:'Priority',text:'Priority'},
+        {dataIndex:'Platforms',text:'Platforms',subCells:[
+            {dataIndex:'PlatformDotCom',text:'Dotcom',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformiPad',text:'iPad',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformiPhone',text:'iPhone',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
+            {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
+        ]},
+        {dataIndex:'Description',text:'Description'},
+        {dataIndex:'Comments',text:'Comments'}
+    ],
     items: [
         {xtype:'container',itemId:'selector_outer_box', layout:{type:'hbox'}, padding: 10, items:[
             {xtype:'container',itemId:'type_box', margin: 5},
@@ -100,7 +114,7 @@ Ext.define('CustomApp', {
         this._makeTitlePage(product);
         this._makeProductSummarySection(product);
         
-        this._getFeatures([product]).then({
+        this._getFeaturesAndStories([product]).then({
             success: function(feature_oids) {
                 me.logger.log("Features",feature_oids.length);
                 me._mask("Generating Tables");
@@ -114,7 +128,7 @@ Ext.define('CustomApp', {
             }
         });
     },
-    _getFeatures: function(values) {
+    _getFeaturesAndStories: function(values) {
         var me = this;
         var deferred = Ext.create('Deft.Deferred');
         this.logger.log('_getFeatures');  
@@ -142,7 +156,7 @@ Ext.define('CustomApp', {
             listeners: {
                 scope: this,
                 load: function(store,records,successful,opts){
-                    me.logger.log("features",records.length);
+                    me.logger.log("# features",records.length);
                     
                     var promises=[];
                     
@@ -152,10 +166,34 @@ Ext.define('CustomApp', {
                         var oid = feature.get('ObjectID');
                         me._feature_oids.push(oid);
                         me._records_by_oid[oid] = feature;
+                        promises.push(me._getStoriesForFeature(feature));
                     });
                     
-                    deferred.resolve(me._feature_oids);
-
+                    Deft.Promise.all(promises).then({
+                        success: function(items) {
+                            deferred.resolve(me._feature_oids);
+                        }
+                    });
+                }
+            }
+        });
+        return deferred.promise;
+    },
+    _getStoriesForFeature:function(feature){
+        var deferred = Ext.create('Deft.Deferred');
+        this._mask("Loading Stories...");
+        Ext.create('Rally.data.WsapiDataStore',{
+            model:'HierarchicalRequirement',
+            autoLoad: true,
+            filters: [{property:'PortfolioItem.ObjectID',value:feature.get('ObjectID')}],
+            context: { project: null },
+            sorters: [{property:'Rank'}],
+            listeners: {
+                scope: this,
+                load: function(store,records,successful,opts){
+                    this.logger.log('# stories for ', feature.get("FormattedID"), records.length);
+                    feature.set('__stories',records);
+                    deferred.resolve([]);
                 }
             }
         });
@@ -306,9 +344,56 @@ Ext.define('CustomApp', {
         Ext.Array.each(feature_oids,function(feature_oid,index){
             var feature = records_by_oid[feature_oid];
             var html = me._getFeatureHTML(feature,index);
+            
+            var stories = feature.get('__stories') || [];
+            
+            html.push('<div style="margin-top:16px;">');
+            if ( stories.length == 0 ) {
+                var feature_paragraph = index + 1;
+                html.push('<h4 class="ts-sans-serif-blue">NOTE: Feature has no stories</h3>');
+            }
+            Ext.Array.each(stories,function(story,story_index){
+                html.push(me._getStoryHTML(story,story_index,index));
+            });
+            html.push('</div>');
+
             me.down('#report_box').add({xtype:'container',html:html.join('\r\n'), padding: 10});
         });
         this._unmask();
+    },
+    _getStoryHTML: function(story,story_index,feature_index){
+        var html = [];
+        var me = this;
+        
+        var feature_paragraph = feature_index + 1;
+        var story_paragraph = story_index + 1;
+        
+        var paragraph = '3.' + feature_paragraph + '.' + story_paragraph;
+        
+        html.push('<a name="'+ story.get('FormattedID') + '"></a>');
+        html.push('<h4 class="ts-sans-serif-blue">' + paragraph + ' Story ' + story.get('FormattedID') + '</h4>');
+        
+        html.push('<div class="ts-indented">');
+        html.push('<table>');
+        Ext.Array.each(me._story_detail_table_rows,function(row){
+            if ( row.subCells ) {
+                html.push(me._getRowWithSubCell(row,story));
+            } else {
+                html.push('<tr>');
+                html.push('<td class="ts-table-header-left-justified" style="height: 23px; width: 100px;">');
+                html.push(row.text);
+                html.push('</td>');
+                html.push('<td class="ts-table-cell-left-justified" style="height: 25px; " colspan="5">');
+                
+                html.push(me._render(story,row));
+                html.push('</td>');
+                html.push('</tr>');
+            }
+        });
+        html.push('</table>');
+        html.push('</div>');
+        
+        return html.join('\r\n');
     },
     _getFeatureHTML:function(feature,index){
         var me = this;
@@ -318,7 +403,7 @@ Ext.define('CustomApp', {
         var paragraph = index+1;
 
         html.push('<a name="'+ feature.get('FormattedID') + '"></a>');
-        html.push('<h3 class="ts-sans-serif-blue">3.' + paragraph + ' Feature ' + feature.get('FormattedID') + '</h2>');
+        html.push('<h3 class="ts-sans-serif-blue">3.' + paragraph + ' Feature ' + feature.get('FormattedID') + '</h3>');
         html.push('<table>');
         Ext.Array.each(me._feature_detail_table_rows,function(row){
             if ( row.subCells ) {
