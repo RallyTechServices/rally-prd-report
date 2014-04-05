@@ -25,7 +25,6 @@ Ext.define('CustomApp', {
     _story_detail_table_rows: [
         {dataIndex:'FormattedID',text:'ID'},
         {dataIndex:'Name',text:'Requirement'},
-        {dataIndex:'Priority',text:'Priority'},
         {dataIndex:'Platforms',text:'Platforms',subCells:[
             {dataIndex:'PlatformDotCom',text:'Dotcom',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformiPad',text:'iPad',renderer: TSRenderers.renderCheck},
