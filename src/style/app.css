@@ -105,3 +105,16 @@ h4.ts-sans-serif-blue {
     right:0px;
     width:5%;
 }
+
+.page ul {
+    padding-left: 40px;
+    padding-top: 10px;
+}
+
+.page ul li {
+    list-style: disc;
+    list-style-position: outside;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}

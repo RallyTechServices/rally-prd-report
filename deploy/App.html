@@ -3,11 +3,11 @@
 <head>
     <title>Rally PRD Report</title>
     <!--  (c) 2013 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Fri Apr 04 2014 19:47:46 GMT-0700 (PDT) -->
+    <!--  Build Date: Mon Apr 07 2014 20:53:45 GMT-0700 (PDT) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Fri Apr 04 2014 19:47:46 GMT-0700 (PDT)";
-        var CHECKSUM = 43894252456;
+        var APP_BUILD_DATE = "Mon Apr 07 2014 20:53:45 GMT-0700 (PDT)";
+        var CHECKSUM = 45081383290;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc2/sdk.js"></script>
@@ -145,6 +145,9 @@ Ext.define('TSRenderers',{
         } 
         return "<img src='https://us1.rallydev.com/slm/js-lib/rui/builds/rui/resources/themes/images/default/cardboard/slim-cards/ready-icon.png'/>";
     },
+    renderDescription: function(value){
+        return "<div class='noscript page'>" + value + "</div>";
+    },
     renderPercent: function(value,record,app) {
         if ( ! value ) {
             return "";
@@ -205,7 +208,7 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
-        {dataIndex:'Description',text:'Description'},
+        {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
         {dataIndex:'TestCases', text:'Test Cases',renderer: TSRenderers.renderCheck},
         {dataIndex:'Comments',text:'Comments'}
     ],
@@ -219,7 +222,7 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
-        {dataIndex:'Description',text:'Description'},
+        {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
         {dataIndex:'Comments',text:'Comments'}
     ],
     items: [
@@ -972,6 +975,19 @@ h4.ts-sans-serif-blue {
     position:absolute;
     right:0px;
     width:5%;
+}
+
+.page ul {
+    padding-left: 40px;
+    padding-top: 10px;
+}
+
+.page ul li {
+    list-style: disc;
+    list-style-position: outside;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
     </style>
 

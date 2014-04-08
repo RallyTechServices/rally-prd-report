@@ -7,6 +7,9 @@ Ext.define('TSRenderers',{
         } 
         return "<img src='https://us1.rallydev.com/slm/js-lib/rui/builds/rui/resources/themes/images/default/cardboard/slim-cards/ready-icon.png'/>";
     },
+    renderDescription: function(value){
+        return "<div class='noscript page'>" + value + "</div>";
+    },
     renderPercent: function(value,record,app) {
         if ( ! value ) {
             return "";

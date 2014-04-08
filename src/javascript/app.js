@@ -18,7 +18,7 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
-        {dataIndex:'Description',text:'Description'},
+        {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
         {dataIndex:'TestCases', text:'Test Cases',renderer: TSRenderers.renderCheck},
         {dataIndex:'Comments',text:'Comments'}
     ],
@@ -32,7 +32,7 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
-        {dataIndex:'Description',text:'Description'},
+        {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
         {dataIndex:'Comments',text:'Comments'}
     ],
     items: [
