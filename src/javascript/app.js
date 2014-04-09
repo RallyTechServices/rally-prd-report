@@ -4,6 +4,7 @@ Ext.define('CustomApp', {
     logger: new Rally.technicalservices.Logger(),
     _feature_summary_table_fields: [
         {dataIndex:'FormattedID',text:'PRD ID'},
+        {dataIndex:'storyID',text:'User Story'},
         {dataIndex:'Priority',text:'Priority'},
         {dataIndex:'Name',text:'Requirement'}
     ],
@@ -290,6 +291,28 @@ Ext.define('CustomApp', {
                 html.push('</td>');
             });
             html.push('</tr>');
+            var stories = feature.get('__stories');
+            if ( stories && stories.length > 0 ) {
+                Ext.Array.each(stories,function(story){
+                    html.push('<tr>');
+                
+                    // make a cell for each column for this story
+                    Ext.Array.each(me._feature_summary_table_fields,function(field){
+                        html.push('<td id="id" class="ts-table-cell-center-justified" style="height: 25px; width: 100px;">');
+                        if ( field.dataIndex === 'FormattedID' ) {
+                            html.push(' ');
+                        } else if ( field.dataIndex === 'storyID' ){
+                            html.push('<a href="#' + story.get('FormattedID') + '">');
+                            html.push(me._render(story,{dataIndex:'FormattedID'}));
+                            html.push('</a>');
+                        } else {
+                            html.push(me._render(story,field));
+                        }
+                        html.push('</td>');
+                    });
+                    html.push('</tr>');  
+                });
+            }
         });
 
         html.push('</table>');
