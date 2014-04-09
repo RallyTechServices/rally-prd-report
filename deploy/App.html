@@ -3,11 +3,11 @@
 <head>
     <title>Rally PRD Report</title>
     <!--  (c) 2013 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Mon Apr 07 2014 20:53:45 GMT-0700 (PDT) -->
+    <!--  Build Date: Wed Apr 09 2014 14:20:03 GMT-0700 (PDT) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Mon Apr 07 2014 20:53:45 GMT-0700 (PDT)";
-        var CHECKSUM = 45081383290;
+        var APP_BUILD_DATE = "Wed Apr 09 2014 14:20:03 GMT-0700 (PDT)";
+        var CHECKSUM = 45890908996;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc2/sdk.js"></script>
@@ -338,6 +338,9 @@ Ext.define('CustomApp', {
                     
                     var promises=[];
                     
+                    if ( records.length === 0 ) {
+                        me._showNoFeaturesMessage();
+                    }
                     // loop over all the products 
                     // -- save for future use in a hash
                     Ext.Array.each(records, function(feature){
@@ -549,6 +552,10 @@ Ext.define('CustomApp', {
 
             me.down('#report_box').add({xtype:'container',html:html.join('\r\n'), padding: 10});
         });
+        this._unmask();
+    },
+    _showNoFeaturesMessage: function() {
+        this.down('#report_box').add({xtype:'container',html:"No features found for this product.", padding: 10});
         this._unmask();
     },
     _getStoryHTML: function(story,story_index,feature_index){

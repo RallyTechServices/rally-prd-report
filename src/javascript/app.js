@@ -148,6 +148,9 @@ Ext.define('CustomApp', {
                     
                     var promises=[];
                     
+                    if ( records.length === 0 ) {
+                        me._showNoFeaturesMessage();
+                    }
                     // loop over all the products 
                     // -- save for future use in a hash
                     Ext.Array.each(records, function(feature){
@@ -359,6 +362,10 @@ Ext.define('CustomApp', {
 
             me.down('#report_box').add({xtype:'container',html:html.join('\r\n'), padding: 10});
         });
+        this._unmask();
+    },
+    _showNoFeaturesMessage: function() {
+        this.down('#report_box').add({xtype:'container',html:"No features found for this product.", padding: 10});
         this._unmask();
     },
     _getStoryHTML: function(story,story_index,feature_index){
