@@ -9,7 +9,7 @@ Ext.define('CustomApp', {
         {dataIndex:'Name',text:'Requirement'}
     ],
     _feature_detail_table_rows: [
-        {dataIndex:'FormattedID',text:'ID'},
+        {dataIndex:'State',text:'ID'},
         {dataIndex:'Name',text:'Requirement'},
         {dataIndex:'Priority',text:'Priority'},
         {dataIndex:'Platforms',text:'Platforms',subCells:[
@@ -20,21 +20,21 @@ Ext.define('CustomApp', {
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
         {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
-        {dataIndex:'TestCases', text:'Test Cases',renderer: TSRenderers.renderCheck},
-        {dataIndex:'Comments',text:'Comments'}
+        {dataIndex:'Blocked', text:'Test Cases',renderer: TSRenderers.renderCheck},
+        {dataIndex:'Notes',text:'Comments'}
     ],
     _story_detail_table_rows: [
-        {dataIndex:'FormattedID',text:'ID'},
+        {dataIndex:'ScheduleState',text:'ID'},
         {dataIndex:'Name',text:'Requirement'},
         {dataIndex:'Platforms',text:'Platforms',subCells:[
             {dataIndex:'PlatformDotCom',text:'Dotcom',renderer: TSRenderers.renderCheck},
-            {dataIndex:'PlatformiPad',text:'iPad',renderer: TSRenderers.renderCheck},
+            {dataIndex:'Blocked',text:'iPad',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformiPhone',text:'iPhone',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidTablet',text:'Android Tablet',renderer: TSRenderers.renderCheck},
             {dataIndex:'PlatformAndroidPhone',text:'Android Phone',renderer: TSRenderers.renderCheck}
         ]},
         {dataIndex:'Description',text:'Description', renderer: TSRenderers.renderDescription },
-        {dataIndex:'Comments',text:'Comments'}
+        {dataIndex:'Notes',text:'Comments'}
     ],
     items: [
         {xtype:'container',itemId:'selector_outer_box', layout:{type:'hbox'}, padding: 10, items:[
@@ -47,19 +47,19 @@ Ext.define('CustomApp', {
     ],
     launch: function() {
         this.logger.log("Launching with context",this.getContext());
-        this._addProductChooser();
+        this._addInitiativeChooser();
     },
-    _addProductChooser: function() {
+    _addInitiativeChooser: function() {
         this.down('#selector_box').add({
             xtype: 'rallycombobox',
             allowNoEntry: true,
             autoExpand: true,
             itemId:'product_chooser',
-            fieldLabel: 'Product',
+            fieldLabel: 'Initiative',
             labelWidth: 75,
             storeConfig: {
                 autoLoad:true,
-                model:'portfolioitem/product',
+                model:'portfolioitem/initiative',
                 limit:'Infinity'
             },
             listeners: {
@@ -69,12 +69,14 @@ Ext.define('CustomApp', {
                         this._getData([]);
                         this.down('#pick_feature_button').setDisabled(false);
                         this.down('#print_button').setDisabled(false);
+                        this.down('#save_button').setDisabled(false);
                     }
                 }
             }
         });
         this._addFeatureButton();
         this._addPrintButton();
+        this._addSaveButton();
     },
     _getIndices: function(hashes){
         var indices = [];
@@ -207,11 +209,11 @@ Ext.define('CustomApp', {
         var html = [];
         html.push('<div class="print-after-box">');
         
-        html.push('<div class="ts-title">');
+        html.push('<h1><div class="ts-title">');
         html.push(product.get('Name') + '<br/>');
         html.push('PRODUCT REQUIREMENT<br/>');
         html.push('DOCUMENT (PRD)');
-        html.push('</div>');
+        html.push('</div></h1>');
         
         html.push('<div class="ts-title-contact">');
         html.push('Point of Contact: ' + product.get('Owner')._refObjectName);
@@ -236,7 +238,7 @@ Ext.define('CustomApp', {
         
         html.push('<h3 class="ts-sans-serif-blue">1.2 Consumer Value Proposition</h2>');
         html.push('<div class="ts-indented">');
-        html.push(product.get('ConsumerValue'));
+        html.push(product.get('Notes'));
         html.push('</div>');
         
         html.push('<h3 class="ts-sans-serif-blue">1.3 Strategic Context</h2>');
@@ -331,6 +333,48 @@ Ext.define('CustomApp', {
             }
         });
     },
+    _addSaveButton: function() {        
+        this.down('#button_box').add({
+            xtype:'rallybutton',
+            text:'Save',
+            itemId:'save_button',
+            scope: this,
+            disabled: true,
+            handler: function() {
+                var output = Ext.clone(this.down('#report_box')).el;
+                var report_html = output.dom.innerHTML;
+
+                var html = "";
+
+                html += '<html>';
+
+                html += "<body>";
+//                html += "Bacon ipsum dolor sit amet rump pastrami landjaeger brisket, filet mignon strip steak biltong capicola pig pork loin andouille ground round leberkas flank. Leberkas porchetta hamburger shank turducken pork belly ground round sirloin ribeye shoulder frankfurter rump andouille. Pork meatloaf tongue salami ham hock ham. Salami jowl short ribs shank.";
+//                html += "Tail beef ribs pig venison, shankle bresaola short loin. Leberkas turkey hamburger jerky jowl tenderloin pork chop. Capicola filet mignon shankle, tongue short ribs hamburger chuck. Landjaeger tail rump, pig drumstick andouille prosciutto t-bone tongue. Bacon cow sirloin shankle, t-bone boudin short loin frankfurter pork chop meatball landjaeger ribeye. T-bone brisket ball tip bacon ham pancetta. Brisket shoulder shank, cow short ribs drumstick turkey landjaeger biltong tongue tri-tip beef ribs sausage.";
+                //html += report_html.replace(/div>/g,"div>LINEEND");
+                html += report_html;
+                html = html.replace(/<h(\d).*?>/g,"<h$1>");
+                html = html.replace(/ /g,"&nbsp;")
+                
+                html = html.replace(/<div.*?>/ig,'<p>').replace(/<\/div>/g,"</p>");
+                html = html.replace(/<br>/ig,"<p>");
+                
+                console.log(html);
+                var html_array = html.split('LINEEND');
+                
+                html += '</body></html>';
+
+//
+                console.log(html);
+                var doc = new jsPDF();
+//                Ext.Array.each(html_array,function(line){
+//                    doc.text(15,15,line);
+//                });
+                doc.fromHTML(html,15,15,{ 'width':170 });
+                doc.save('test.pdf');
+            }
+        });
+    },
     _addPrintButton: function() {
         
         this.down('#button_box').add({
@@ -357,7 +401,7 @@ Ext.define('CustomApp', {
                 print_window.document.close();
 
                 print_window.print();
-                
+
             }
         });
     },

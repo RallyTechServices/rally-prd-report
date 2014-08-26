@@ -5,7 +5,8 @@ Ext.define('TSRenderers',{
         if ( ! value || value == "false" ) {
             return "";
         } 
-        return "<img src='https://us1.rallydev.com/slm/js-lib/rui/builds/rui/resources/themes/images/default/cardboard/slim-cards/ready-icon.png'/>";
+        //return "<img src='https://us1.rallydev.com/slm/js-lib/rui/builds/rui/resources/css/images/cardboard/slim-cards/ready-icon.png'/>";
+        return "x";
     },
     renderDescription: function(value){
         return "<div class='noscript page'>" + value + "</div>";
